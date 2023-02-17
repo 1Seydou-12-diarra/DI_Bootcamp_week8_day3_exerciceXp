@@ -20,18 +20,24 @@ RIGHT JOIN language ON film.language_id = language.language_id;
 
 -- 4- Create a new table called customer_review, which will contain film reviews that customers will make.
 -- 1-review_id - une clé primaire, non nulle, auto-incrémentée.
+
 CREATE TABLE customer_review (
-    review_id INT NOT NULL  PRIMARY KEY SERIAL,
-    film_id INT NOT NULL,
+    review_id SERIAL,
+    film_id INT,
     language_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     score INT NOT NULL,
     review_text TEXT NOT NULL,
-    last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (review_id),
-    FOREIGN KEY (film_id) REFERENCES new_film(id) ON DELETE CASCADE,
-    FOREIGN KEY (language_id) REFERENCES language(id)
+    last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY(film_id),
+	CONSTRAINT fk_film
+		FOREIGN KEY(film_id)
+		REFERENCES new_film(id) ON DELETE CASCADE,
+	UNIQUE (language_id),
+	CONSTRAINT fk_language
+    FOREIGN KEY (language_id) REFERENCES language(language_id)
 );
+
 
 -- 5- Ajoutez 2 critiques de films. Assurez-vous de les lier à des objets valides dans les autres tables.
 INSERT INTO customer_review (film_id, language_id, title, score, review_text)
